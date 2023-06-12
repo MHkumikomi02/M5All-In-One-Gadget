@@ -90,6 +90,14 @@
 #define MENU_MEASURE_Y_CRD 100
 #define MENU_DATE_X_CRD 0
 #define MENU_DATE_Y_CRD 150
+#define COMMON_BUTTON_UP_X_CRD 0
+#define COMMON_BUTTON_UP_Y_CRD 200
+#define COMMON_BUTTON_DECIDE_X_CRD 120
+#define COMMON_BUTTON_DECIDE_Y_CRD 200
+#define COMMON_BUTTON_DOWN_X_CRD 240
+#define COMMON_BUTTON_DOWN_Y_CRD 200
+
+
 
 // WBGT jpg image coordinate
 
@@ -129,3 +137,6 @@ typedef enum {
     HIGH_ALERT,
     DANGER
 } WbgtIndex;
+
+
+

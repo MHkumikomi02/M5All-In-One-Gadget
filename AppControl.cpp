@@ -103,6 +103,10 @@ void AppControl::displayMenuInit()
     mlcd.displayJpgImageCoordinate(MENU_MUSIC_IMG_PATH, MENU_MUSIC_X_CRD , MENU_MUSIC_Y_CRD );
     mlcd.displayJpgImageCoordinate(MENU_MEASURE_IMG_PATH, MENU_MEASURE_X_CRD , MENU_MEASURE_Y_CRD );
     mlcd.displayJpgImageCoordinate(MENU_DATE_IMG_PATH, MENU_DATE_X_CRD , MENU_DATE_Y_CRD );
+
+    mlcd.displayJpgImageCoordinate(COMMON_BUTTON_UP_IMG_PATH, COMMON_BUTTON_UP_X_CRD , COMMON_BUTTON_UP_Y_CRD);
+    mlcd.displayJpgImageCoordinate(COMMON_BUTTON_DECIDE_IMG_PATH, COMMON_BUTTON_DECIDE_X_CRD , COMMON_BUTTON_DECIDE_Y_CRD);
+    mlcd.displayJpgImageCoordinate(COMMON_BUTTON_DOWN_IMG_PATH, COMMON_BUTTON_DOWN_X_CRD , COMMON_BUTTON_DOWN_Y_CRD);
 }
 
 void AppControl::focusChangeImg(FocusState current_state, FocusState next_state)
@@ -119,6 +123,7 @@ void AppControl::displayTempHumiIndex()
 
 void AppControl::displayMusicInit()
 {
+
 }
 
 void AppControl::displayMusicStop()
@@ -198,10 +203,14 @@ void AppControl::controlApplication()
                 break;
 
             case DO:
-            if(m_flag_btnA_is_pressed || m_flag_btnB_is_pressed || m_flag_btnC_is_pressed){
-                   setStateMachine(TITLE, EXIT);
+            if(BTN_A_GPIO == HIHG){
+                  if(== LOW){
+                     = HIGH;
+                }else{
+                     = LOW;
                 }
-                setStateMachine(MENU, EXIT);
+                setStateMachine(TITLE, EXIT);
+                }
                 break;
 
             case EXIT:
