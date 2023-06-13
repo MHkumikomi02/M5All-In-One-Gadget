@@ -36,25 +36,3 @@ void MdLcd::displayDateText(String text, int x, int y)
     M5.Lcd.setTextSize(5);
     M5.Lcd.print(text);
 }
-
-
-
-
-
-/*if (MENU_WBGT ,  MENU_MUSIC) {
-    mlcd.displayJpgImageCoordinate(MENU_WBGT_FOCUS_IMG_PATH, MENU_WBGT_X_CRD , MENU_WBGT_Y_CRD );
-    }else if (MENU_WBGT , MENU_DATE) {
-    mlcd.displayJpgImageCoordinate(MENU_WBGT_FOCUS_IMG_PATH, MENU_WBGT_X_CRD , MENU_WBGT_Y_CRD );
-    }else if (MENU_MUSIC , MENU_MEASURE) {
-    mlcd.displayJpgImageCoordinate(MENU_MUSIC_FOCUS_IMG_PATH, MENU_MUSIC_X_CRD , MENU_MUSIC_Y_CRD );
-    }else if (MENU_MUSIC , MENU_WBGT){
-    mlcd.displayJpgImageCoordinate(MENU_MUSIC_FOCUS_IMG_PATH, MENU_MUSIC_X_CRD , MENU_MUSIC_Y_CRD );
-    }else if (MENU_MEASURE , MENU_MUSIC) {
-    mlcd.displayJpgImageCoordinate(MENU_MEASURE_FOCUS_IMG_PATH, MENU_MEASURE_X_CRD , MENU_MEASURE_Y_CRD );
-    }else if(MENU_MEASURE , MENU_WBGT){
-    mlcd.displayJpgImageCoordinate(MENU_MEASURE_FOCUS_IMG_PATH, MENU_MEASURE_X_CRD , MENU_MEASURE_Y_CRD );
-    }else if (MENU_DATE , MENU_WBGT) {
-    mlcd.displayJpgImageCoordinate(MENU_DATE_FOCUS_IMG_PATH, MENU_DATE_X_CRD , MENU_DATE_Y_CRD );
-    }else if(MENU_DATE , MENU_MEASURE){
-    mlcd.displayJpgImageCoordinate(MENU_DATE_FOCUS_IMG_PATH, MENU_DATE_X_CRD , MENU_DATE_Y_CRD );
-     }*/

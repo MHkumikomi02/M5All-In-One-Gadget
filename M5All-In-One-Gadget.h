@@ -137,6 +137,3 @@ typedef enum {
     HIGH_ALERT,
     DANGER
 } WbgtIndex;
-
-
-

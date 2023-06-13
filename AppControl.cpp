@@ -80,6 +80,7 @@ void AppControl::setStateMachine(State state, Action action)
 {
     setState(state);
     setAction(action);
+
 }
 
 FocusState AppControl::getFocusState()
@@ -111,6 +112,43 @@ void AppControl::displayMenuInit()
 
 void AppControl::focusChangeImg(FocusState current_state, FocusState next_state)
 {
+   switch() {
+    case MENU_WBGT:
+        mlcd.displayJpgImageCoordinate(MENU_WBGT_FOCUS_IMG_PATH, MENU_WBGT_X_CRD , MENU_WBGT_Y_CRD );
+        mlcd.displayJpgImageCoordinate(MENU_MUSIC_IMG_PATH, MENU_MUSIC_X_CRD , MENU_MUSIC_Y_CRD );
+    case MENU_MUSIC:
+        mlcd.displayJpgImageCoordinate(MENU_MUSIC_FOCUS_IMG_PATH, MENU_MUSIC_X_CRD , MENU_MUSIC_Y_CRD );
+        mlcd.displayJpgImageCoordinate(MENU_MEASURE_IMG_PATH, MENU_MEASURE_X_CRD , MENU_MEASURE_Y_CRD );
+    break;
+    case MENU_MEASURE:
+        mlcd.displayJpgImageCoordinate(MENU_MEASURE_FOCUS_IMG_PATH, MENU_MEASURE_X_CRD , MENU_MEASURE_Y_CRD );
+        mlcd.displayJpgImageCoordinate(MENU_DATE_IMG_PATH, MENU_DATE_X_CRD , MENU_DATE_Y_CRD );
+    break;
+    case MENU_DATE:
+        mlcd.displayJpgImageCoordinate(MENU_DATE_FOCUS_IMG_PATH, MENU_DATE_X_CRD , MENU_DATE_Y_CRD );
+        mlcd.displayJpgImageCoordinate(MENU_WBGT_IMG_PATH, MENU_WBGT_X_CRD , MENU_WBGT_Y_CRD );
+    break;
+    default: 
+    }
+
+    /*switch() {
+    case MENU_WBGT:
+        mlcd.displayJpgImageCoordinate(MENU_WBGT_FOCUS_IMG_PATH, MENU_WBGT_X_CRD , MENU_WBGT_Y_CRD );
+        mlcd.displayJpgImageCoordinate(MENU_MUSIC_IMG_PATH, MENU_MUSIC_X_CRD , MENU_MUSIC_Y_CRD );
+    case MENU_MUSIC:
+        mlcd.displayJpgImageCoordinate(MENU_MUSIC_FOCUS_IMG_PATH, MENU_MUSIC_X_CRD , MENU_MUSIC_Y_CRD );
+        mlcd.displayJpgImageCoordinate(MENU_MEASURE_IMG_PATH, MENU_MEASURE_X_CRD , MENU_MEASURE_Y_CRD );
+    break;
+    case MENU_MEASURE:
+        mlcd.displayJpgImageCoordinate(MENU_MEASURE_FOCUS_IMG_PATH, MENU_MEASURE_X_CRD , MENU_MEASURE_Y_CRD );
+        mlcd.displayJpgImageCoordinate(MENU_DATE_IMG_PATH, MENU_DATE_X_CRD , MENU_DATE_Y_CRD );
+    break;
+    case MENU_DATE:
+        mlcd.displayJpgImageCoordinate(MENU_DATE_FOCUS_IMG_PATH, MENU_DATE_X_CRD , MENU_DATE_Y_CRD );
+        mlcd.displayJpgImageCoordinate(MENU_WBGT_IMG_PATH, MENU_WBGT_X_CRD , MENU_WBGT_Y_CRD );
+    break;
+    default: 
+    }*/
 }
 
 void AppControl::displayWBGTInit()
@@ -184,6 +222,7 @@ void AppControl::controlApplication()
                 break;
 
             case EXIT:
+                setBtnAllFlgFalse();
                 setStateMachine(MENU, ENTRY);
                 break;
             default:
@@ -197,24 +236,27 @@ void AppControl::controlApplication()
             switch (getAction()) {
             case ENTRY:
                 displayMenuInit();
-                setBtnAllFlgFalse();
                 setStateMachine(MENU, DO);
-
                 break;
 
+            
             case DO:
-            if(BTN_A_GPIO == HIHG){
-                  if(== LOW){
-                     = HIGH;
-                }else{
-                     = LOW;
+            if(m_flag_btnC_is_pressed){
+                focusChangeImg(MENU_WBGT,MENU_MUSIC);
+            }
+
+            if(setFocusState() == MENU_WBGT ){
+                if(valueopen == LOW){
+                    valueopen = HIGH;
                 }
-                setStateMachine(TITLE, EXIT);
-                }
+
+
+                setBtnAllFlgFalse();
+                setStateMachine(MENU, EXIT);
                 break;
 
             case EXIT:
-                
+                setStateMachine(MENU, DO);
             default:
                 break;
             }
