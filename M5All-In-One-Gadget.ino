@@ -1,7 +1,6 @@
 #include "M5All-In-One-Gadget.h"
 #include <M5Stack.h>
 #include <SD.h>
-
 #include "AppControl.h"
 
 AppControl apc;

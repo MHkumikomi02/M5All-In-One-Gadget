@@ -112,51 +112,51 @@ void AppControl::displayMenuInit()
 
 void AppControl::focusChangeImg(FocusState current_state, FocusState next_state)
 {
-   switch() {
-    case MENU_WBGT:
-        mlcd.displayJpgImageCoordinate(MENU_WBGT_FOCUS_IMG_PATH, MENU_WBGT_X_CRD , MENU_WBGT_Y_CRD );
-        mlcd.displayJpgImageCoordinate(MENU_MUSIC_IMG_PATH, MENU_MUSIC_X_CRD , MENU_MUSIC_Y_CRD );
-    case MENU_MUSIC:
-        mlcd.displayJpgImageCoordinate(MENU_MUSIC_FOCUS_IMG_PATH, MENU_MUSIC_X_CRD , MENU_MUSIC_Y_CRD );
-        mlcd.displayJpgImageCoordinate(MENU_MEASURE_IMG_PATH, MENU_MEASURE_X_CRD , MENU_MEASURE_Y_CRD );
-    break;
-    case MENU_MEASURE:
-        mlcd.displayJpgImageCoordinate(MENU_MEASURE_FOCUS_IMG_PATH, MENU_MEASURE_X_CRD , MENU_MEASURE_Y_CRD );
-        mlcd.displayJpgImageCoordinate(MENU_DATE_IMG_PATH, MENU_DATE_X_CRD , MENU_DATE_Y_CRD );
-    break;
-    case MENU_DATE:
-        mlcd.displayJpgImageCoordinate(MENU_DATE_FOCUS_IMG_PATH, MENU_DATE_X_CRD , MENU_DATE_Y_CRD );
-        mlcd.displayJpgImageCoordinate(MENU_WBGT_IMG_PATH, MENU_WBGT_X_CRD , MENU_WBGT_Y_CRD );
-    break;
-    default: 
-    }
+  if(MENU_WBGT == current_state && next_state == MENU_MUSIC){  //音楽プレーヤーにフォーカス
+    mlcd.displayJpgImageCoordinate(MENU_WBGT_IMG_PATH, MENU_WBGT_X_CRD , MENU_WBGT_Y_CRD );
+    mlcd.displayJpgImageCoordinate(MENU_MUSIC_FOCUS_IMG_PATH, MENU_MUSIC_X_CRD , MENU_MUSIC_Y_CRD );
+    setFocusState(MENU_MUSIC);
+  }else if(MENU_WBGT == current_state && next_state ==MENU_DATE){ //時刻表示にフォーカス
+    mlcd.displayJpgImageCoordinate(MENU_WBGT_IMG_PATH, MENU_WBGT_X_CRD , MENU_WBGT_Y_CRD );
+    mlcd.displayJpgImageCoordinate(MENU_DATE_FOCUS_IMG_PATH, MENU_DATE_X_CRD , MENU_DATE_Y_CRD );
+    setFocusState(MENU_DATE);
+  }else if(MENU_MUSIC == current_state && next_state == MENU_MEASURE ){  //距離測定にフォーカス
+    mlcd.displayJpgImageCoordinate(MENU_MUSIC_IMG_PATH,  MENU_MUSIC_X_CRD , MENU_MUSIC_Y_CRD);
+    mlcd.displayJpgImageCoordinate(MENU_MEASURE_FOCUS_IMG_PATH, MENU_MEASURE_X_CRD , MENU_MEASURE_Y_CRD );
+    setFocusState(MENU_MEASURE);
+  }else if(MENU_MUSIC == current_state && next_state == MENU_WBGT ){  //熱中症にフォーカス
+    mlcd.displayJpgImageCoordinate(MENU_MUSIC_IMG_PATH,  MENU_MUSIC_X_CRD , MENU_MUSIC_Y_CRD);
+    mlcd.displayJpgImageCoordinate(MENU_WBGT_FOCUS_IMG_PATH, MENU_WBGT_X_CRD , MENU_WBGT_Y_CRD );
+    setFocusState(MENU_WBGT);
+  }else if( MENU_MEASURE== current_state && next_state == MENU_DATE ){  //時刻表示にフォーカス
+    mlcd.displayJpgImageCoordinate(MENU_MEASURE_IMG_PATH,  MENU_MEASURE_X_CRD , MENU_MEASURE_Y_CRD );
+    mlcd.displayJpgImageCoordinate(MENU_DATE_FOCUS_IMG_PATH, MENU_DATE_X_CRD , MENU_DATE_Y_CRD );
+    setFocusState(MENU_DATE);
+  }else if( MENU_MEASURE== current_state && next_state == MENU_MUSIC ){  //音楽プレーヤーにフォーカス
+    mlcd.displayJpgImageCoordinate(MENU_MEASURE_IMG_PATH,  MENU_MEASURE_X_CRD , MENU_MEASURE_Y_CRD );
+    mlcd.displayJpgImageCoordinate(MENU_MUSIC_FOCUS_IMG_PATH, MENU_MUSIC_X_CRD , MENU_MUSIC_Y_CRD );
+    setFocusState(MENU_MUSIC);
+  }else if(MENU_DATE == current_state && next_state == MENU_WBGT ){  //熱中症にフォーカス
+   mlcd.displayJpgImageCoordinate(MENU_DATE_IMG_PATH, MENU_DATE_X_CRD , MENU_DATE_Y_CRD );
+    mlcd.displayJpgImageCoordinate(MENU_WBGT_FOCUS_IMG_PATH, MENU_WBGT_X_CRD , MENU_WBGT_Y_CRD );
+    setFocusState( MENU_WBGT);
+  }else if(MENU_DATE == current_state && next_state == MENU_MEASURE ){  //距離測定にフォーカス
+    mlcd.displayJpgImageCoordinate(MENU_DATE_IMG_PATH, MENU_DATE_X_CRD , MENU_DATE_Y_CRD );
+    mlcd.displayJpgImageCoordinate(MENU_MEASURE_FOCUS_IMG_PATH,  MENU_MEASURE_X_CRD , MENU_MEASURE_Y_CRD );
+    setFocusState(MENU_MEASURE);
+  }
 
-    /*switch() {
-    case MENU_WBGT:
-        mlcd.displayJpgImageCoordinate(MENU_WBGT_FOCUS_IMG_PATH, MENU_WBGT_X_CRD , MENU_WBGT_Y_CRD );
-        mlcd.displayJpgImageCoordinate(MENU_MUSIC_IMG_PATH, MENU_MUSIC_X_CRD , MENU_MUSIC_Y_CRD );
-    case MENU_MUSIC:
-        mlcd.displayJpgImageCoordinate(MENU_MUSIC_FOCUS_IMG_PATH, MENU_MUSIC_X_CRD , MENU_MUSIC_Y_CRD );
-        mlcd.displayJpgImageCoordinate(MENU_MEASURE_IMG_PATH, MENU_MEASURE_X_CRD , MENU_MEASURE_Y_CRD );
-    break;
-    case MENU_MEASURE:
-        mlcd.displayJpgImageCoordinate(MENU_MEASURE_FOCUS_IMG_PATH, MENU_MEASURE_X_CRD , MENU_MEASURE_Y_CRD );
-        mlcd.displayJpgImageCoordinate(MENU_DATE_IMG_PATH, MENU_DATE_X_CRD , MENU_DATE_Y_CRD );
-    break;
-    case MENU_DATE:
-        mlcd.displayJpgImageCoordinate(MENU_DATE_FOCUS_IMG_PATH, MENU_DATE_X_CRD , MENU_DATE_Y_CRD );
-        mlcd.displayJpgImageCoordinate(MENU_WBGT_IMG_PATH, MENU_WBGT_X_CRD , MENU_WBGT_Y_CRD );
-    break;
-    default: 
-    }*/
 }
 
 void AppControl::displayWBGTInit()
 {
+   
 }
+
 
 void AppControl::displayTempHumiIndex()
 {
+
 }
 
 void AppControl::displayMusicInit()
@@ -166,6 +166,7 @@ void AppControl::displayMusicInit()
 
 void AppControl::displayMusicStop()
 {
+
 }
 
 void AppControl::displayMusicTitle()
@@ -174,30 +175,39 @@ void AppControl::displayMusicTitle()
 
 void AppControl::displayNextMusic()
 {
+
 }
 
 void AppControl::displayMusicPlay()
 {
+
 }
 
 void AppControl::displayMeasureInit()
 {
+
 }
 
 void AppControl::displayMeasureDistance()
 {
+
 }
 
 void AppControl::displayDateInit()
 {
+
 }
 
 void AppControl::displayDateUpdate()
 {
+
 }
 
 void AppControl::controlApplication()
 {
+    mmplay.init();
+    Serial.println(getFocusState());
+
     while (1) {
 
         switch (getState()) {
@@ -223,6 +233,7 @@ void AppControl::controlApplication()
 
             case EXIT:
                 setBtnAllFlgFalse();
+                M5.Lcd.fillScreen(TFT_WHITE);
                 setStateMachine(MENU, ENTRY);
                 break;
             default:
@@ -241,22 +252,44 @@ void AppControl::controlApplication()
 
             
             case DO:
-            if(m_flag_btnC_is_pressed){
-                focusChangeImg(MENU_WBGT,MENU_MUSIC);
+                if(m_flag_btnC_is_pressed){
+                switch(getFocusState()){
+                    case MENU_WBGT:
+                        focusChangeImg(MENU_WBGT, MENU_MUSIC);
+                        break;
+                    case MENU_MUSIC:
+                        focusChangeImg(MENU_MUSIC, MENU_MEASURE);
+                        break;
+                    case MENU_MEASURE:
+                        focusChangeImg(MENU_MEASURE, MENU_DATE);
+                        break;
+                    case MENU_DATE:
+                        focusChangeImg(MENU_DATE, MENU_WBGT);
+                        break;
+                    }  
+            }else if(m_flag_btnA_is_pressed){
+                switch(getFocusState()){
+                    case MENU_DATE:
+                        focusChangeImg(MENU_DATE, MENU_MEASURE);
+                        break;
+                     case MENU_MEASURE:
+                        focusChangeImg(MENU_MEASURE, MENU_MUSIC);
+                        break;
+                    case MENU_MUSIC:
+                        focusChangeImg(MENU_MUSIC, MENU_WBGT);
+                        break;
+                    case MENU_WBGT:
+                        focusChangeImg(MENU_WBGT, MENU_DATE);
+                        break;
+                    }
             }
-
-            if(setFocusState() == MENU_WBGT ){
-                if(valueopen == LOW){
-                    valueopen = HIGH;
-                }
-
-
+        
                 setBtnAllFlgFalse();
                 setStateMachine(MENU, EXIT);
                 break;
 
             case EXIT:
-                setStateMachine(MENU, DO);
+                 setStateMachine(MENU, DO);
             default:
                 break;
             }
@@ -267,10 +300,22 @@ void AppControl::controlApplication()
 
             switch (getAction()) {
             case ENTRY:
-
                 break;
 
             case DO:
+            if (m_flag_btnB_is_pressed) {
+                showTempHumi = !showTempHumi;
+                if (showTempHumi) {
+                    getTempHumi(temperature, humidity);
+                    M5.Lcd.clear();
+                    M5.Lcd.setCursor(20, 100);
+                    M5.Lcd.printf("Temperature: %.2f°C", temperature);
+                    M5.Lcd.setCursor(20, 120);
+                    M5.Lcd.printf("Humidity: %.2f%%", humidity);
+            } else {
+                    M5.Lcd.clear();
+                 }
+            }
                 break;
 
             case EXIT:
