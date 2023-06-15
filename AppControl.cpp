@@ -22,7 +22,7 @@ const char* g_str_orange[] = {
 };
 
 const char* g_str_blue[] = {
-    COMMON_BLUE0_IMG_PATH,
+    COMMON_BLUE0_IMG_PATH,  
     COMMON_BLUE1_IMG_PATH,
     COMMON_BLUE2_IMG_PATH,
     COMMON_BLUE3_IMG_PATH,
@@ -150,9 +150,49 @@ void AppControl::focusChangeImg(FocusState current_state, FocusState next_state)
 
 void AppControl::displayWBGTInit()
 {
-    mlcd.displayJpgImageCoordinate(COMMON_ORANGEDOT_IMG_PATH,  MENU_MEASURE_X_CRD , MENU_MEASURE_Y_CRD );
-   
+  double temperature;
+  double humidity;    
+  getTempHumi(&temperature, &humidity);
+
+  double heatstrokealert = 0.68 * temperature + 0.12 * humidity;
+
+    if (heatstrokealert <= 15) {
+    M5.Lcd.drawJpgFile(COMMON_WBGT_safe_IMG_PATH, COMMON_WBGT_IMG_PATH_X_CRD, COMMON_WBGT_IMG_PATH_Y_CRD);
+    } else if (heatstrokealert >= 15 && heatstrokealert <= 24) {
+    M5.Lcd.drawJpgFile(COMMON_WBGT_attention_IMG_PATH, COMMON_WBGT_IMG_PATH_120, COMMON_BUTTON_DECIDE_Y_CRD);
+    } else if (heatstrokealert >= 24 && heatstrokealert <= 27) {
+    M5.Lcd.drawJpgFile(COMMON_WBGT_alert_IMG_PATH, COMMON_WBGT_IMG_PATH_120, COMMON_BUTTON_DECIDE_Y_CRD);
+    } else if (heatstrokealert >= 27 && heatstrokealert <= 30) {
+    M5.Lcd.drawJpgFile(COMMON_WBGT_high_alert_IMG_PATH, COMMON_WBGT_IMG_PATH_120, COMMON_BUTTON_DECIDE_Y_CRD);
+    } else if (heatstrokealert >= 30 && heatstrokealert <= 31) {
+    M5.Lcd.drawJpgFile(COMMON_WBGT_danger_IMG_PATH, COMMON_WBGT_IMG_PATH_120, COMMON_BUTTON_DECIDE_Y_CRD);
+    } 
+
 }
+
+
+
+
+   mlcd.displayJpgImageCoordinate(COMMON_ORANGE_temperature_IMG_PATH, COMMON_WBGT_IMG_PATH_X_CRD , COMMON_WBGT_IMG_PATH_Y_CRD );
+
+
+   mlcd.displayJpgImageCoordinate(COMMON_ORANGE0_IMG_PATH, COMMON_WBGT_IMG_PATH_120 , COMMON_WBGT_IMG_PATH_Y_CRD );
+   mlcd.displayJpgImageCoordinate(COMMON_ORANGE0_IMG_PATH, COMMON_WBGT_IMG_PATH_153 , COMMON_WBGT_IMG_PATH_Y_CRD );
+   mlcd.displayJpgImageCoordinate(COMMON_ORANGEDOT_IMG_PATH, COMMON_WBGT_IMG_PATH_186 , COMMON_WBGT_IMG_PATH_Y_CRD );
+   mlcd.displayJpgImageCoordinate(COMMON_ORANGE0_IMG_PATH, COMMON_WBGT_IMG_PATH_220 , COMMON_WBGT_IMG_PATH_Y_CRD );
+   mlcd.displayJpgImageCoordinate(COMMON_ORANGE_degree_IMG_PATH, COMMON_WBGT_IMG_PATH_253 , COMMON_WBGT_IMG_PATH_Y_CRD );
+
+   mlcd.displayJpgImageCoordinate(COMMON_BLUE_humidity_IMG_PATH, COMMON_WBGT_IMG_PATH_X_CRD , COMMON_BLUE_IMG_PATH_Y_CRD );
+   mlcd.displayJpgImageCoordinate(COMMON_BLUE0_IMG_PATH, COMMON_WBGT_IMG_PATH_120 , COMMON_BLUE_IMG_PATH_Y_CRD );
+   mlcd.displayJpgImageCoordinate(COMMON_BLUE0_IMG_PATH, COMMON_WBGT_IMG_PATH_153 , COMMON_BLUE_IMG_PATH_Y_CRD );
+   mlcd.displayJpgImageCoordinate(COMMON_BLUEDOT_IMG_PATH, COMMON_WBGT_IMG_PATH_186 , COMMON_BLUE_IMG_PATH_Y_CRD );
+   mlcd.displayJpgImageCoordinate(COMMON_BLUE0_IMG_PATH, COMMON_WBGT_IMG_PATH_220 , COMMON_BLUE_IMG_PATH_Y_CRD );
+   mlcd.displayJpgImageCoordinate(COMMON_BLUE_percent_IMG_PATH, COMMON_WBGT_IMG_PATH_253 , COMMON_WBGT_IMG_PATH_Y_CRD );
+
+   mlcd.displayJpgImageCoordinate(COMMON_WBGT_safe_IMG_PATH, COMMON_WBGT_IMG_PATH_X_CRD , COMMON_MBGT_IMG_PATH_Y_CRD );
+
+   mlcd.displayJpgImageCoordinate(COMMON_BUTTON_BACK_IMG_PATH, COMMON_WBGT_IMG_PATH_120 , COMMON_BUTTON_DECIDE_Y_CRD );  
+
 
 
 void AppControl::displayTempHumiIndex()
@@ -234,7 +274,7 @@ void AppControl::controlApplication()
 
             case EXIT:
                 setBtnAllFlgFalse();
-                M5.Lcd.fillScreen(TFT_WHITE);
+                M5.Lcd.clear();
                 setStateMachine(MENU, ENTRY);
                 break;
             default:
@@ -283,10 +323,31 @@ void AppControl::controlApplication()
                         focusChangeImg(MENU_WBGT, MENU_DATE);
                         break;
                     }
+            }else if(m_flag_btnB_is_pressed){
+                switch(getFocusState()){
+                    case MENU_WBGT:
+                        focusChangeImg(MENU_DATE, MENU_WBGT);
+                        M5.Lcd.fillScreen(TFT_WHITE);
+                        displayWBGTInit();
+                        setStateMachine(WBGT, ENTRY);
+                        break;
+                    case MENU_MUSIC:
+                        focusChangeImg(MENU_WBGT, MENU_MUSIC);
+                        setStateMachine(MUSIC_PLAY, DO);
+                        break;
+                    case MENU_MEASURE:
+                        focusChangeImg(MENU_MUSIC, MENU_MEASURE);
+                        setStateMachine(MEASURE, DO);
+                        break;
+                    case MENU_DATE:
+                        focusChangeImg(MENU_MEASURE, MENU_DATE);
+                        setStateMachine(DATE, DO);
+                        break;
+                    }
+
             }
-        
                 setBtnAllFlgFalse();
-                setStateMachine(MENU, EXIT);
+                setStateMachine(MENU, DO);
                 break;
 
             case EXIT:
@@ -301,42 +362,31 @@ void AppControl::controlApplication()
 
             switch (getAction()) {
             case ENTRY:
+            displayWBGTInit();
+            setStateMachine(WBGT, DO);
                 break;
 
             case DO:
-            if (m_flag_btnB_is_pressed) {
-                showTempHumi = !showTempHumi;
-                if (showTempHumi) {
-                    getTempHumi(temperature, humidity);
-                    M5.Lcd.clear();
-                    M5.Lcd.setCursor(20, 100);
-                    M5.Lcd.printf("Temperature: %.2f°C", temperature);
-                    M5.Lcd.setCursor(20, 120);
-                    M5.Lcd.printf("Humidity: %.2f%%", humidity);
-            } else {
-                    M5.Lcd.clear();
-                 }
+            setStateMachine(WBGT, );
+                break;
+            case EXIT:            
+                break;
+            if(m_flag_btnB_is_pressed){
+            setStateMachine(WBGT, DO);
             }
-                break;
-
-            case EXIT:
-                break;
-
-            default:
-                break;
-            }
-
             break;
-
+        }
         case MUSIC_STOP:
             switch (getAction()) {
             case ENTRY:
+            setStateMachine(MUSIC_STOP, DO);
                 break;
 
             case DO:
                 break;
 
             case EXIT:
+            setStateMachine(MENU, DO);
                 break;
 
             default:
@@ -355,6 +405,7 @@ void AppControl::controlApplication()
                 break;
 
             case EXIT:
+            setStateMachine(MENU, DO);
                 break;
 
             default:
@@ -373,6 +424,7 @@ void AppControl::controlApplication()
                 break;
 
             case EXIT:
+            setStateMachine(MENU, DO);
                 break;
 
             default:
@@ -391,6 +443,7 @@ void AppControl::controlApplication()
                 break;
 
             case EXIT:
+            setStateMachine(MENU, DO);
                 break;
 
             default:

@@ -98,16 +98,32 @@
 #define COMMON_BUTTON_DOWN_X_CRD 240
 #define COMMON_BUTTON_DOWN_Y_CRD 200
 
-#define COMMON_ORANGE_IMG_PATH 120
-#define COMMON_ORANGE_IMG_PATH 153
-#define COMMON_ORANGE_IMG_PATH 186
-#define COMMON_ORANGE_IMG_PATH 220
-#define COMMON_ORANGE_IMG_PATH 253
-#define COMMON_ORANGE_IMG_PATH_X_CRD 0
-#define COMMON_ORANGE_IMG_PATH_Y_CRD 0
+#define COMMON_WBGT_IMG_PATH_120 120
+#define COMMON_WBGT_IMG_PATH_153 153
+#define COMMON_WBGT_IMG_PATH_186 186
+#define COMMON_WBGT_IMG_PATH_220 220
+#define COMMON_WBGT_IMG_PATH_253 253
+#define COMMON_WBGT_IMG_PATH_X_CRD 0
+#define COMMON_WBGT_IMG_PATH_Y_CRD 0
+
+#define COMMON_BLUE_IMG_PATH_Y_CRD 50
+
+#define COMMON_MBGT_IMG_PATH_Y_CRD 100
 
 
 // WBGT jpg image coordinate
+#define COMMON_WBGT_safe_IMG_PATH "/images/wbgt/safe.jpg"
+#define COMMON_WBGT_attention_IMG_PATH "/images/wbgt/attention.jpg"
+#define COMMON_WBGT_alert_IMG_PATH "/images/wbgt/alert.jpg"
+#define COMMON_WBGT_high_alert_IMG_PATH "/images/wbgt/high_alert.jpg"
+#define COMMON_WBGT_danger_IMG_PATH "/images/wbgt/danger.jpg"
+#define COMMON_ORANGE_degree_IMG_PATH "/images/wbgt/degree.jpg"
+#define COMMON_ORANGE_temperature_IMG_PATH "/images/wbgt/temperature.jpg"
+#define COMMON_ORANGE_humidity_IMG_PATH "/images/wbgt/humidity.jpg"
+
+#define COMMON_BLUE_humidity_IMG_PATH "/images/wbgt/humidity.jpg"
+#define COMMON_BLUE_percent_IMG_PATH "/images/wbgt/percent.jpg"
+
 
 // Music jpg image coordinate
 
