@@ -1,7 +1,7 @@
 #include "MdWBGTMonitor.h"  
 
 
-double calculateHeatstrokeAlert(double temperature, double humidity) {
+double MdWBGTMonitor::calculateHeatstrokeAlert(double temperature, double humidity) {
     double heatstrokealert = 0.68 * temperature + 0.12 * humidity;
     return heatstrokealert;
 }
