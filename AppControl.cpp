@@ -150,50 +150,118 @@ void AppControl::focusChangeImg(FocusState current_state, FocusState next_state)
 
 void AppControl::displayWBGTInit()
 {
-  double temperature;
-  double humidity;    
-  getTempHumi(&temperature, &humidity);
+    double temperature;
+    double humidity;
+    
+    WbgtIndex index;
 
-  double heatstrokealert = 0.68 * temperature + 0.12 * humidity;
+    mwbgt.getWBGT(&temperature, &humidity, &index);
 
-    if (heatstrokealert <= 15) {
-    M5.Lcd.drawJpgFile(COMMON_WBGT_safe_IMG_PATH, COMMON_WBGT_IMG_PATH_X_CRD, COMMON_WBGT_IMG_PATH_Y_CRD);
-    } else if (heatstrokealert >= 15 && heatstrokealert <= 24) {
-    M5.Lcd.drawJpgFile(COMMON_WBGT_attention_IMG_PATH, COMMON_WBGT_IMG_PATH_120, COMMON_BUTTON_DECIDE_Y_CRD);
-    } else if (heatstrokealert >= 24 && heatstrokealert <= 27) {
-    M5.Lcd.drawJpgFile(COMMON_WBGT_alert_IMG_PATH, COMMON_WBGT_IMG_PATH_120, COMMON_BUTTON_DECIDE_Y_CRD);
-    } else if (heatstrokealert >= 27 && heatstrokealert <= 30) {
-    M5.Lcd.drawJpgFile(COMMON_WBGT_high_alert_IMG_PATH, COMMON_WBGT_IMG_PATH_120, COMMON_BUTTON_DECIDE_Y_CRD);
-    } else if (heatstrokealert >= 30 && heatstrokealert <= 31) {
-    M5.Lcd.drawJpgFile(COMMON_WBGT_danger_IMG_PATH, COMMON_WBGT_IMG_PATH_120, COMMON_BUTTON_DECIDE_Y_CRD);
-    } 
+    if (index == SAFE) {
+        mlcd.displayJpgImageCoordinate(COMMON_WBGT_safe_IMG_PATH, COMMON_WBGT_IMG_PATH_X_CRD, COMMON_WBGT_IMG_PATH_Y_CRD);
+    } else if (index == ATTENTION) {
+        mlcd.displayJpgImageCoordinate(COMMON_WBGT_attention_IMG_PATH, COMMON_WBGT_IMG_PATH_120, COMMON_BUTTON_DECIDE_Y_CRD);
+    } else if (index == ALERT) {
+        mlcd.displayJpgImageCoordinate(COMMON_WBGT_alert_IMG_PATH, COMMON_WBGT_IMG_PATH_120, COMMON_BUTTON_DECIDE_Y_CRD);
+    } else if (index == HIGH_ALERT) {
+        mlcd.displayJpgImageCoordinate(COMMON_WBGT_high_alert_IMG_PATH, COMMON_WBGT_IMG_PATH_120, COMMON_BUTTON_DECIDE_Y_CRD);
+    } else if (index == DANGER) {
+        mlcd.displayJpgImageCoordinate(COMMON_WBGT_danger_IMG_PATH, COMMON_WBGT_IMG_PATH_120, COMMON_BUTTON_DECIDE_Y_CRD);
+    }
 
+    int temperatureIntegerDigits = 2; // 温度の整数
+    int temperatureDecimalDigits = 1; // 温度の小数
+
+    while (temperatureIntegerDigits > 0) {
+    int digit = static_cast<int>(temperature) % 10;
+    Serial.println(digit);
+    const char* imagePath = g_str_orange[digit];
+    mlcd.displayJpgImageCoordinate(imagePath, COMMON_WBGT_IMG_PATH_120, COMMON_WBGT_IMG_PATH_Y_CRD);
+    temperature /= 10;
+    temperatureIntegerDigits--;
+    }
+
+    while (temperatureDecimalDigits > 0) {
+    int digit = static_cast<int>(temperature * 10) % 10;
+    Serial.println(digit);
+    const char* imagePath = g_str_orange[digit];
+    mlcd.displayJpgImageCoordinate(imagePath, COMMON_WBGT_IMG_PATH_120, COMMON_WBGT_IMG_PATH_Y_CRD);
+    temperature *= 10;
+    temperatureDecimalDigits--;
+    }
+
+    int humidityIntegerDigits = 2; // 湿度の整数
+    int humidityDecimalDigits = 1; // 湿度の小数
+
+    while (humidityIntegerDigits > 0) {
+    int digit = static_cast<int>(humidity) % 10;
+    Serial.println(digit);
+    const char* imagePath = g_str_blue[digit];
+    mlcd.displayJpgImageCoordinate(imagePath, COMMON_WBGT_IMG_PATH_120, COMMON_WBGT_IMG_PATH_Y_CRD);
+    humidity /= 10;
+    humidityIntegerDigits--;
+    }
+
+    while (humidityDecimalDigits > 0) {
+    int digit = static_cast<int>(humidity * 10) % 10;
+    Serial.println(digit);
+    const char* imagePath = g_str_blue[digit];
+    mlcd.displayJpgImageCoordinate(imagePath, COMMON_WBGT_IMG_PATH_120, COMMON_WBGT_IMG_PATH_Y_CRD);
+    humidity *= 10;
+    humidityDecimalDigits--;
+    }
+
+    /*
+    while (temperature != 0) {
+        int digit = temperature % 10;
+        switch (digit) {
+            case 0:
+                mlcd.displayJpgImageCoordinate(COMMON_ORANGE0_IMG_PATH, COMMON_WBGT_IMG_PATH_120, COMMON_WBGT_IMG_PATH_Y_CRD);
+                break;
+            case 1:
+                mlcd.displayJpgImageCoordinate(COMMON_ORANGE1_IMG_PATH, COMMON_WBGT_IMG_PATH_120, COMMON_WBGT_IMG_PATH_Y_CRD);
+                break;
+            case 2:
+                mlcd.displayJpgImageCoordinate(COMMON_ORANGE2_IMG_PATH, COMMON_WBGT_IMG_PATH_120, COMMON_WBGT_IMG_PATH_Y_CRD);
+                break;
+            case 3:
+                mlcd.displayJpgImageCoordinate(COMMON_ORANGE3_IMG_PATH, COMMON_WBGT_IMG_PATH_120, COMMON_WBGT_IMG_PATH_Y_CRD);
+                break;
+            case 4:
+                mlcd.displayJpgImageCoordinate(COMMON_ORANGE4_IMG_PATH, COMMON_WBGT_IMG_PATH_120, COMMON_WBGT_IMG_PATH_Y_CRD);
+                break;
+            case 5:
+                mlcd.displayJpgImageCoordinate(COMMON_ORANGE5_IMG_PATH, COMMON_WBGT_IMG_PATH_120, COMMON_WBGT_IMG_PATH_Y_CRD);
+                break;
+            case 6:
+                mlcd.displayJpgImageCoordinate(COMMON_ORANGE6_IMG_PATH, COMMON_WBGT_IMG_PATH_120, COMMON_WBGT_IMG_PATH_Y_CRD);
+                break;
+            case 7:
+                mlcd.displayJpgImageCoordinate(COMMON_ORANGE7_IMG_PATH, COMMON_WBGT_IMG_PATH_120, COMMON_WBGT_IMG_PATH_Y_CRD);
+                break;
+            case 8:
+                mlcd.displayJpgImageCoordinate(COMMON_ORANGE8_IMG_PATH, COMMON_WBGT_IMG_PATH_120, COMMON_WBGT_IMG_PATH_Y_CRD);
+                break;
+            case 9:
+                mlcd.displayJpgImageCoordinate(COMMON_ORANGE9_IMG_PATH, COMMON_WBGT_IMG_PATH_120, COMMON_WBGT_IMG_PATH_Y_CRD);
+                break;
+        }
+        temperature /= 10;
 }
 
+    while (humidity != 0) {
+        int digit = humidity
 
+    }
 
+    */
 
-   mlcd.displayJpgImageCoordinate(COMMON_ORANGE_temperature_IMG_PATH, COMMON_WBGT_IMG_PATH_X_CRD , COMMON_WBGT_IMG_PATH_Y_CRD );
-
-
-   mlcd.displayJpgImageCoordinate(COMMON_ORANGE0_IMG_PATH, COMMON_WBGT_IMG_PATH_120 , COMMON_WBGT_IMG_PATH_Y_CRD );
-   mlcd.displayJpgImageCoordinate(COMMON_ORANGE0_IMG_PATH, COMMON_WBGT_IMG_PATH_153 , COMMON_WBGT_IMG_PATH_Y_CRD );
-   mlcd.displayJpgImageCoordinate(COMMON_ORANGEDOT_IMG_PATH, COMMON_WBGT_IMG_PATH_186 , COMMON_WBGT_IMG_PATH_Y_CRD );
-   mlcd.displayJpgImageCoordinate(COMMON_ORANGE0_IMG_PATH, COMMON_WBGT_IMG_PATH_220 , COMMON_WBGT_IMG_PATH_Y_CRD );
-   mlcd.displayJpgImageCoordinate(COMMON_ORANGE_degree_IMG_PATH, COMMON_WBGT_IMG_PATH_253 , COMMON_WBGT_IMG_PATH_Y_CRD );
-
-   mlcd.displayJpgImageCoordinate(COMMON_BLUE_humidity_IMG_PATH, COMMON_WBGT_IMG_PATH_X_CRD , COMMON_BLUE_IMG_PATH_Y_CRD );
-   mlcd.displayJpgImageCoordinate(COMMON_BLUE0_IMG_PATH, COMMON_WBGT_IMG_PATH_120 , COMMON_BLUE_IMG_PATH_Y_CRD );
-   mlcd.displayJpgImageCoordinate(COMMON_BLUE0_IMG_PATH, COMMON_WBGT_IMG_PATH_153 , COMMON_BLUE_IMG_PATH_Y_CRD );
-   mlcd.displayJpgImageCoordinate(COMMON_BLUEDOT_IMG_PATH, COMMON_WBGT_IMG_PATH_186 , COMMON_BLUE_IMG_PATH_Y_CRD );
-   mlcd.displayJpgImageCoordinate(COMMON_BLUE0_IMG_PATH, COMMON_WBGT_IMG_PATH_220 , COMMON_BLUE_IMG_PATH_Y_CRD );
-   mlcd.displayJpgImageCoordinate(COMMON_BLUE_percent_IMG_PATH, COMMON_WBGT_IMG_PATH_253 , COMMON_WBGT_IMG_PATH_Y_CRD );
-
-   mlcd.displayJpgImageCoordinate(COMMON_WBGT_safe_IMG_PATH, COMMON_WBGT_IMG_PATH_X_CRD , COMMON_MBGT_IMG_PATH_Y_CRD );
-
-   mlcd.displayJpgImageCoordinate(COMMON_BUTTON_BACK_IMG_PATH, COMMON_WBGT_IMG_PATH_120 , COMMON_BUTTON_DECIDE_Y_CRD );  
-
-
+    mlcd.displayJpgImageCoordinate(COMMON_ORANGE_degree_IMG_PATH, COMMON_WBGT_IMG_PATH_253 , COMMON_WBGT_IMG_PATH_Y_CRD );
+    mlcd.displayJpgImageCoordinate(COMMON_BLUE_percent_IMG_PATH, COMMON_WBGT_IMG_PATH_253 , COMMON_WBGT_IMG_PATH_Y_CRD ); 
+    mlcd.displayJpgImageCoordinate(COMMON_ORANGEDOT_IMG_PATH, COMMON_WBGT_IMG_PATH_186 , COMMON_WBGT_IMG_PATH_Y_CRD );
+    mlcd.displayJpgImageCoordinate(COMMON_BLUEDOT_IMG_PATH, COMMON_WBGT_IMG_PATH_186 , COMMON_BLUE_IMG_PATH_Y_CRD );
+    mlcd.displayJpgImageCoordinate(COMMON_BUTTON_BACK_IMG_PATH, COMMON_WBGT_IMG_PATH_120 , COMMON_BUTTON_DECIDE_Y_CRD );  
+}
 
 void AppControl::displayTempHumiIndex()
 {
@@ -294,6 +362,7 @@ void AppControl::controlApplication()
             
             case DO:
                 if(m_flag_btnC_is_pressed){
+                mlcd.displayJpgImageCoordinate(MENU_WBGT_FOCUS_IMG_PATH, MENU_WBGT_X_CRD , MENU_WBGT_Y_CRD );
                 switch(getFocusState()){
                     case MENU_WBGT:
                         focusChangeImg(MENU_WBGT, MENU_MUSIC);
@@ -367,12 +436,12 @@ void AppControl::controlApplication()
                 break;
 
             case DO:
-            setStateMachine(WBGT, );
+            setStateMachine(WBGT, EXIT);
                 break;
             case EXIT:            
                 break;
             if(m_flag_btnB_is_pressed){
-            setStateMachine(WBGT, DO);
+            setStateMachine(MENU, DO);
             }
             break;
         }
