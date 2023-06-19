@@ -108,7 +108,7 @@
 
 #define COMMON_BLUE_IMG_PATH_Y_CRD 50
 
-#define COMMON_MBGT_IMG_PATH_Y_CRD 100
+#define COMMON_WBGT_IMG_PATH_Y_100 100
 
 
 // WBGT jpg image coordinate

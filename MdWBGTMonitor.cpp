@@ -1,5 +1,7 @@
 #include "MdWBGTMonitor.h"  
+#include "DrTHSensor.h"
 
+DrTHSensor drhsensor;
 
 double MdWBGTMonitor::calculateHeatstrokeAlert(double temperature, double humidity) {
     double heatstrokealert = 0.68 * temperature + 0.12 * humidity;
@@ -7,6 +9,8 @@ double MdWBGTMonitor::calculateHeatstrokeAlert(double temperature, double humidi
 }
 
 void MdWBGTMonitor::getWBGT(double* temperature, double* humidity, WbgtIndex* index) {
+    drhsensor.init();
+    drhsensor.getTempHumi(temperature, humidity);
     double heatstrokealert = calculateHeatstrokeAlert(*temperature, *humidity);
 
     if (heatstrokealert <= 15) {
