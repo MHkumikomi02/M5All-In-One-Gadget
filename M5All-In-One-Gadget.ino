@@ -12,14 +12,14 @@ void buttonA_isr()
     apc.setBtnAFlg(true);
 }
 
-// BUTTON A（真ん中） の割込み関数
+// BUTTON B（真ん中） の割込み関数
 void buttonB_isr()
 {
-    ////Serial.println("B interrupt : State[" + String(apc.getState()) + "] Action[" + String(apc.getAction()) + "]");
+    //Serial.println("B interrupt : State[" + String(apc.getState()) + "] Action[" + String(apc.getAction()) + "]");
     apc.setBtnBFlg(true);
 }
 
-// BUTTON A（右） の割込み関数
+// BUTTON C（右） の割込み関数
 void buttonC_isr()
 {
     //Serial.println("C interrupt : State[" + String(apc.getState()) + "] Action[" + String(apc.getAction()) + "]");

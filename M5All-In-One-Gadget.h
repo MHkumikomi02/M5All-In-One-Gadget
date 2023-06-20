@@ -126,6 +126,12 @@
 
 
 // Music jpg image coordinate
+#define Music_nowplaying_IMG_PATH "/images/music/nowplaying.jpg"
+#define Music_nowstopping_IMG_PATH "/images/music/nowstopping.jpg"
+#define COMMON_BUTTON_PLAY_IMG_PATH "/images/common/button/play.jpg"
+#define COMMON_BUTTON_BACK_IMG_PATH "/images/common/button/back.jpg"
+#define COMMON_BUTTON_NEXT_IMG_PATH "/images/common/button/next.jpg"
+
 
 // Measure jpg image coordinate
 

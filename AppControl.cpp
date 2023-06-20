@@ -220,7 +220,10 @@ void AppControl::displayTempHumiIndex()
 
 void AppControl::displayMusicInit()
 {
-
+    mlcd.displayJpgImageCoordinate(Music_nowplaying_IMG_PATH, COMMON_WBGT_IMG_PATH_X_CRD , COMMON_WBGT_IMG_PATH_Y_CRD );
+    mlcd.displayJpgImageCoordinate(COMMON_BUTTON_PLAY_IMG_PATH, COMMON_BUTTON_UP_X_CRD , COMMON_BUTTON_UP_Y_CRD ); 
+    mlcd.displayJpgImageCoordinate(COMMON_BUTTON_BACK_IMG_PATH, COMMON_WBGT_IMG_PATH_120 , COMMON_BUTTON_UP_Y_CRD );
+    mlcd.displayJpgImageCoordinate(COMMON_BUTTON_NEXT_IMG_PATH, COMMON_BUTTON_DOWN_X_CRD , COMMON_BUTTON_UP_Y_CRD ); 
 }
 
 void AppControl::displayMusicStop()
@@ -240,6 +243,7 @@ void AppControl::displayNextMusic()
 void AppControl::displayMusicPlay()
 {
 
+    
 }
 
 void AppControl::displayMeasureInit()
@@ -265,8 +269,7 @@ void AppControl::displayDateUpdate()
 void AppControl::controlApplication()
 {
     mmplay.init();
- 
-
+  
     while (1) {
 
         switch (getState()) {
@@ -305,12 +308,14 @@ void AppControl::controlApplication()
 
             switch (getAction()) {
             case ENTRY:
-                displayMenuInit();
-                setStateMachine(MENU, DO);
-                break;
+            Serial.println("MENU ENTRY");
+             displayMenuInit();
+            setStateMachine(MENU, DO);
+            break;
 
             
             case DO:
+            Serial.println("MENU DO");
                 if(m_flag_btnC_is_pressed){
                 switch(getFocusState()){
                     case MENU_WBGT:
@@ -344,20 +349,27 @@ void AppControl::controlApplication()
             }else if(m_flag_btnB_is_pressed){
                 switch(getFocusState()){
                     case MENU_WBGT:
-                        focusChangeImg(MENU_DATE, MENU_WBGT);
+                        setBtnAllFlgFalse();
+                        mlcd.clearDisplay();
                         mlcd.fillBackgroundWhite();
                         setStateMachine(WBGT, ENTRY);
                         break;
                     case MENU_MUSIC:
-                        focusChangeImg(MENU_WBGT, MENU_MUSIC);
-                        setStateMachine(MUSIC_PLAY, ENTRY);
+                        setBtnAllFlgFalse();
+                        mlcd.clearDisplay();
+                        mlcd.fillBackgroundWhite();
+                        setStateMachine(MUSIC_STOP, ENTRY);
                         break;
                     case MENU_MEASURE:
-                        focusChangeImg(MENU_MUSIC, MENU_MEASURE);
+                        setBtnAllFlgFalse();
+                        mlcd.clearDisplay();
+                        mlcd.fillBackgroundWhite();
                         setStateMachine(MEASURE, ENTRY);
                         break;
                     case MENU_DATE:
-                        focusChangeImg(MENU_MEASURE, MENU_DATE);
+                        setBtnAllFlgFalse();
+                        mlcd.clearDisplay();
+                        mlcd.fillBackgroundWhite();
                         setStateMachine(DATE, ENTRY);
                         break;
                     }
@@ -366,7 +378,8 @@ void AppControl::controlApplication()
                 setBtnAllFlgFalse();
                 break;
             case EXIT:
-                 setStateMachine(WBGT, ENTRY);
+            Serial.println("MENU EXIT");
+            setStateMachine(WBGT, ENTRY);
             default:
                 break;
             }
@@ -377,48 +390,80 @@ void AppControl::controlApplication()
 
             switch (getAction()) {
             case ENTRY:
+            Serial.println("WBGT ENTRY");
             setStateMachine(WBGT, DO);
+            setBtnAllFlgFalse();
                 break;
 
             case DO:
+            Serial.println("WBGT DO");
             displayWBGTInit();
             displayTempHumiIndex();
-            setStateMachine(WBGT, EXIT);
-                break;
-            case EXIT: 
+
             if(m_flag_btnB_is_pressed){
-            setStateMachine(MENU, DO);
+            setBtnAllFlgFalse();
+            mlcd.clearDisplay();
+            setStateMachine(WBGT, EXIT);
             }
             break;
-
+            case EXIT: 
+            setStateMachine(MENU, ENTRY);
+            break;
+           default:         
+           setStateMachine(MENU, ENTRY);  
              break;
         }
+            break;
+
         case MUSIC_STOP:
             switch (getAction()) {
             case ENTRY:
+            displayMusicInit();
             setStateMachine(MUSIC_STOP, DO);
                 break;
 
             case DO:
-                break;
+
+            if(m_flag_btnA_is_pressed){
+            setBtnAllFlgFalse();
+            mlcd.clearDisplay();
+            setStateMachine(WBGT, EXIT);
+            }
+
+            if(m_flag_btnB_is_pressed){
+            setBtnAllFlgFalse();
+            mlcd.clearDisplay();
+            mlcd.fillBackgroundWhite();
+            setStateMachine(MUSIC_STOP, EXIT);
+            }
+            break;
+
+            if(m_flag_btnC_is_pressed){
+            setBtnAllFlgFalse();
+            mlcd.clearDisplay();
+            setStateMachine(WBGT, EXIT);
+            }
+
 
             case EXIT:
             setStateMachine(MENU, DO);
                 break;
 
             default:
+            setStateMachine(MENU, DO);
                 break;
             }
 
             break;
 
         case MUSIC_PLAY:
-
             switch (getAction()) {
             case ENTRY:
+            setStateMachine(MUSIC_PLAY, DO);
                 break;
 
             case DO:
+            setStateMachine(MUSIC_PLAY, EXIT);
                 break;
 
             case EXIT:
@@ -426,6 +471,7 @@ void AppControl::controlApplication()
                 break;
 
             default:
+            setStateMachine(MENU, DO);
                 break;
             }
 
@@ -435,9 +481,11 @@ void AppControl::controlApplication()
 
             switch (getAction()) {
             case ENTRY:
+            setStateMachine(MEASURE, DO);
                 break;
 
             case DO:
+            setStateMachine(MEASURE, EXIT);
                 break;
 
             case EXIT:
@@ -445,6 +493,7 @@ void AppControl::controlApplication()
                 break;
 
             default:
+            setStateMachine(MENU, DO);
                 break;
             }
 
@@ -454,9 +503,11 @@ void AppControl::controlApplication()
 
             switch (getAction()) {
             case ENTRY:
+            setStateMachine(DATE, DO);
                 break;
 
             case DO:
+            setStateMachine(MEASURE, EXIT);
                 break;
 
             case EXIT:
@@ -464,10 +515,12 @@ void AppControl::controlApplication()
                 break;
 
             default:
+            setStateMachine(MENU, DO);
                 break;
             }
 
         default:
+        setStateMachine(MENU, DO);
             break;
         }
     }
