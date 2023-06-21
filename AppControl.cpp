@@ -220,7 +220,8 @@ void AppControl::displayTempHumiIndex()
 
 void AppControl::displayMusicInit()
 {
-    mlcd.displayJpgImageCoordinate(Music_nowplaying_IMG_PATH, COMMON_WBGT_IMG_PATH_X_CRD , COMMON_WBGT_IMG_PATH_Y_CRD );
+    mlcd.fillBackgroundWhite();
+    mlcd.displayJpgImageCoordinate(Music_nowstopping_IMG_PATH, COMMON_WBGT_IMG_PATH_X_CRD , COMMON_WBGT_IMG_PATH_Y_CRD );
     mlcd.displayJpgImageCoordinate(COMMON_BUTTON_PLAY_IMG_PATH, COMMON_BUTTON_UP_X_CRD , COMMON_BUTTON_UP_Y_CRD ); 
     mlcd.displayJpgImageCoordinate(COMMON_BUTTON_BACK_IMG_PATH, COMMON_WBGT_IMG_PATH_120 , COMMON_BUTTON_UP_Y_CRD );
     mlcd.displayJpgImageCoordinate(COMMON_BUTTON_NEXT_IMG_PATH, COMMON_BUTTON_DOWN_X_CRD , COMMON_BUTTON_UP_Y_CRD ); 
@@ -228,22 +229,29 @@ void AppControl::displayMusicInit()
 
 void AppControl::displayMusicStop()
 {
-
+    mmplay.init();
+    mmplay.stopMP3();
 }
 
 void AppControl::displayMusicTitle()
 {
+    char* title =  mmplay.getTitle();
+    mlcd.displayText(title, TITLE_X_CRD , COMMON_BUTTON_DECIDE_X_CRD);
 }
 
 void AppControl::displayNextMusic()
 {
-
+    mmplay.selectNextMusic();
+    mmplay.playMP3();
 }
 
 void AppControl::displayMusicPlay()
 {
-
-    
+    mlcd.fillBackgroundWhite();
+    mlcd.displayJpgImageCoordinate(Music_nowplaying_IMG_PATH, COMMON_WBGT_IMG_PATH_X_CRD , COMMON_WBGT_IMG_PATH_Y_CRD );
+    mlcd.displayJpgImageCoordinate(COMMON_BUTTON_PLAY_IMG_PATH, COMMON_BUTTON_UP_X_CRD , COMMON_BUTTON_UP_Y_CRD ); 
+    mlcd.displayJpgImageCoordinate(COMMON_BUTTON_BACK_IMG_PATH, COMMON_WBGT_IMG_PATH_120 , COMMON_BUTTON_UP_Y_CRD );
+    mlcd.displayJpgImageCoordinate(COMMON_BUTTON_NEXT_IMG_PATH, COMMON_BUTTON_DOWN_X_CRD , COMMON_BUTTON_UP_Y_CRD ); 
 }
 
 void AppControl::displayMeasureInit()
@@ -309,7 +317,7 @@ void AppControl::controlApplication()
             switch (getAction()) {
             case ENTRY:
             Serial.println("MENU ENTRY");
-             displayMenuInit();
+            displayMenuInit();
             setStateMachine(MENU, DO);
             break;
 
@@ -406,7 +414,8 @@ void AppControl::controlApplication()
             setStateMachine(WBGT, EXIT);
             }
             break;
-            case EXIT: 
+            case EXIT:
+            Serial.println("WBGT EXIT");
             setStateMachine(MENU, ENTRY);
             break;
            default:         
@@ -418,60 +427,78 @@ void AppControl::controlApplication()
         case MUSIC_STOP:
             switch (getAction()) {
             case ENTRY:
+            Serial.println("MUSIC_STOP ENTRY");
             displayMusicInit();
-            setStateMachine(MUSIC_STOP, DO);
-                break;
+            displayMusicTitle();
+            setBtnAllFlgFalse();
+            setStateMachine(MUSIC_STOP, DO); 
+            break;
 
             case DO:
+            Serial.println("MUSIC_STOP DO");
+ 
 
             if(m_flag_btnA_is_pressed){
-            setBtnAllFlgFalse();
             mlcd.clearDisplay();
-            setStateMachine(WBGT, EXIT);
+            displayMusicPlay();
+            displayMusicTitle();
+
+            if (mmplay.isRunningMP3()) {
+            mmplay.playMP3();
+            } else {
+            mmplay.selectNextMusic();
+            mmplay.prepareMP3();
+            }
+
+            setStateMachine(MUSIC_STOP, EXIT);
             }
 
             if(m_flag_btnB_is_pressed){
             setBtnAllFlgFalse();
             mlcd.clearDisplay();
-            mlcd.fillBackgroundWhite();
             setStateMachine(MUSIC_STOP, EXIT);
             }
-            break;
 
             if(m_flag_btnC_is_pressed){
             setBtnAllFlgFalse();
             mlcd.clearDisplay();
-            setStateMachine(WBGT, EXIT);
+            setStateMachine(MUSIC_STOP, EXIT);
             }
-
+                break;
+            setStateMachine(MUSIC_STOP, EXIT);
 
             case EXIT:
-            setStateMachine(MENU, DO);
+            Serial.println("MUSIC_STOP EXIT");
+            setStateMachine(MENU, ENTRY);
                 break;
 
             default:
-            setStateMachine(MENU, DO);
+            setStateMachine(MENU,ENTRY);
                 break;
             }
 
             break;
 
         case MUSIC_PLAY:
-            switch (getAction()) {
+             switch (getAction()) {
             case ENTRY:
+            Serial.println("MUSIC_PLAY ENTRY");
+            displayMusicPlay();
             setStateMachine(MUSIC_PLAY, DO);
                 break;
 
             case DO:
+            Serial.println("MUSIC_PLAY DO");
             setStateMachine(MUSIC_PLAY, EXIT);
                 break;
 
             case EXIT:
-            setStateMachine(MENU, DO);
+            Serial.println("MUSIC_PLAY EXIT");
+            setStateMachine(MENU, ENTRY);
                 break;
 
             default:
-            setStateMachine(MENU, DO);
+            setStateMachine(MENU, ENTRY);
                 break;
             }
 
@@ -481,46 +508,53 @@ void AppControl::controlApplication()
 
             switch (getAction()) {
             case ENTRY:
+            Serial.println("MEASURE ENTRY");
             setStateMachine(MEASURE, DO);
                 break;
 
             case DO:
+            Serial.println("MEASURE DO");
             setStateMachine(MEASURE, EXIT);
                 break;
 
             case EXIT:
-            setStateMachine(MENU, DO);
+            Serial.println("MEASURE EXIT");
+            setStateMachine(MENU, ENTRY);
                 break;
 
             default:
-            setStateMachine(MENU, DO);
+            Serial.println("MEASURE default");
+            setStateMachine(MENU, ENTRY);
                 break;
             }
 
             break;
 
         case DATE:
-
             switch (getAction()) {
             case ENTRY:
+            Serial.println("DATE ENTRY");
             setStateMachine(DATE, DO);
                 break;
 
             case DO:
+            Serial.println("DATE DO");
             setStateMachine(MEASURE, EXIT);
                 break;
 
             case EXIT:
-            setStateMachine(MENU, DO);
+            Serial.println("DATE EXIT");
+            setStateMachine(MENU, ENTRY);
                 break;
 
             default:
-            setStateMachine(MENU, DO);
+            Serial.println("DATE default");
+            setStateMachine(MENU, ENTRY);
                 break;
             }
 
         default:
-        setStateMachine(MENU, DO);
+        setStateMachine(MENU, ENTRY);
             break;
         }
     }

@@ -25,7 +25,7 @@ void MdLcd::displayText(const char* text, int x, int y)
 {
     M5.Lcd.setCursor(x, y);
     M5.Lcd.setTextColor(0x0000, 0xFFFF);
-    M5.Lcd.setTextSize(2);
+    M5.Lcd.setTextSize(3);
     M5.Lcd.print(text);
 }
 
