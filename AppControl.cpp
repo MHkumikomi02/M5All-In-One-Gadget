@@ -220,6 +220,7 @@ void AppControl::displayTempHumiIndex()
 
 void AppControl::displayMusicInit()
 {
+    mlcd.clearDisplay();
     mlcd.fillBackgroundWhite();
     mlcd.displayJpgImageCoordinate(Music_nowstopping_IMG_PATH, COMMON_WBGT_IMG_PATH_X_CRD , COMMON_WBGT_IMG_PATH_Y_CRD );
     mlcd.displayJpgImageCoordinate(COMMON_BUTTON_PLAY_IMG_PATH, COMMON_BUTTON_UP_X_CRD , COMMON_BUTTON_UP_Y_CRD ); 
@@ -241,17 +242,49 @@ void AppControl::displayMusicTitle()
 
 void AppControl::displayNextMusic()
 {
-    mmplay.selectNextMusic();
-    mmplay.playMP3();
+    
 }
 
 void AppControl::displayMusicPlay()
 {
     mlcd.fillBackgroundWhite();
     mlcd.displayJpgImageCoordinate(Music_nowplaying_IMG_PATH, COMMON_WBGT_IMG_PATH_X_CRD , COMMON_WBGT_IMG_PATH_Y_CRD );
-    mlcd.displayJpgImageCoordinate(COMMON_BUTTON_PLAY_IMG_PATH, COMMON_BUTTON_UP_X_CRD , COMMON_BUTTON_UP_Y_CRD ); 
+    mlcd.displayJpgImageCoordinate(COMMON_BUTTON_STOP_IMG_PATH, COMMON_BUTTON_UP_X_CRD , COMMON_BUTTON_UP_Y_CRD ); 
     mlcd.displayJpgImageCoordinate(COMMON_BUTTON_BACK_IMG_PATH, COMMON_WBGT_IMG_PATH_120 , COMMON_BUTTON_UP_Y_CRD );
     mlcd.displayJpgImageCoordinate(COMMON_BUTTON_NEXT_IMG_PATH, COMMON_BUTTON_DOWN_X_CRD , COMMON_BUTTON_UP_Y_CRD ); 
+}
+
+void startMusicPlayback()
+{
+    // 次の音楽ファイルを選択する
+    mmplay.selectNextMusic();
+    // 音楽の再生準備を行う
+    mmplay.prepareMP3();
+    // 音楽を再生する
+    while (mmplay.isRunningMP3()) {
+        mmplay.playMP3();
+    }
+    // 音楽再生が終了したら次の曲へ移動する
+    mmplay.selectNextMusic();
+}
+
+void NextMusicPlay()
+{   // 現在の音楽再生が終了しているか確認
+    if (!mmplay.isRunningMP3()) {
+        // 次の音楽ファイルを選択する
+        mmplay.selectNextMusic();
+        // 音楽の再生準備を行う
+        mmplay.prepareMP3();
+        // 音楽を再生する
+        mmplay.playMP3();
+    }
+}
+
+void StopMusic()
+{
+    if (mmplay.isRunningMP3()) {
+        mmplay.stopMP3();
+    }
 }
 
 void AppControl::displayMeasureInit()
@@ -317,6 +350,7 @@ void AppControl::controlApplication()
             switch (getAction()) {
             case ENTRY:
             Serial.println("MENU ENTRY");
+            mlcd.fillBackgroundWhite();
             displayMenuInit();
             setStateMachine(MENU, DO);
             break;
@@ -428,47 +462,39 @@ void AppControl::controlApplication()
             switch (getAction()) {
             case ENTRY:
             Serial.println("MUSIC_STOP ENTRY");
+            setBtnAllFlgFalse();
             displayMusicInit();
             displayMusicTitle();
-            setBtnAllFlgFalse();
             setStateMachine(MUSIC_STOP, DO); 
             break;
 
             case DO:
             Serial.println("MUSIC_STOP DO");
  
-
-            if(m_flag_btnA_is_pressed){
-            mlcd.clearDisplay();
-            displayMusicPlay();
-            displayMusicTitle();
-
-            if (mmplay.isRunningMP3()) {
-            mmplay.playMP3();
-            } else {
-            mmplay.selectNextMusic();
-            mmplay.prepareMP3();
-            }
-
-            setStateMachine(MUSIC_STOP, EXIT);
-            }
-
-            if(m_flag_btnB_is_pressed){
-            setBtnAllFlgFalse();
-            mlcd.clearDisplay();
-            setStateMachine(MUSIC_STOP, EXIT);
-            }
-
-            if(m_flag_btnC_is_pressed){
-            setBtnAllFlgFalse();
-            mlcd.clearDisplay();
-            setStateMachine(MUSIC_STOP, EXIT);
-            }
+                if(m_flag_btnA_is_pressed){
+                setBtnAllFlgFalse();
+                displayMusicTitle();
+                displayMusicPlay();
+                startMusicPlayback();
+                setStateMachine(MUSIC_PLAY, ENTRY);
+                }else if(m_flag_btnB_is_pressed)
+                {
+                setBtnAllFlgFalse();
+                mlcd.clearDisplay();
+                setStateMachine(MENU, ENTRY);
+                }else if(m_flag_btnC_is_pressed)
+                {
+                setBtnAllFlgFalse();
+                mlcd.clearDisplay();
+                setStateMachine(MUSIC_PLAY, ENTRY);
+                }
                 break;
             setStateMachine(MUSIC_STOP, EXIT);
 
             case EXIT:
             Serial.println("MUSIC_STOP EXIT");
+            setBtnAllFlgFalse();
+            mlcd.clearDisplay();
             setStateMachine(MENU, ENTRY);
                 break;
 
@@ -483,12 +509,28 @@ void AppControl::controlApplication()
              switch (getAction()) {
             case ENTRY:
             Serial.println("MUSIC_PLAY ENTRY");
+            setBtnAllFlgFalse();
+            displayMusicTitle();
             displayMusicPlay();
-            setStateMachine(MUSIC_PLAY, DO);
+            startMusicPlayback();
+            setStateMachine(MUSIC_STOP, EXIT);
+            
                 break;
 
             case DO:
             Serial.println("MUSIC_PLAY DO");
+            
+                if(m_flag_btnA_is_pressed){
+                setBtnAllFlgFalse();
+                StopMusic();
+                setStateMachine(MUSIC_STOP, ENTRY);
+                }
+
+                if(m_flag_btnB_is_pressed){
+                setBtnAllFlgFalse();
+                mlcd.clearDisplay();
+                setStateMachine(MUSIC_STOP, ENTRY);
+    
             setStateMachine(MUSIC_PLAY, EXIT);
                 break;
 
@@ -500,7 +542,8 @@ void AppControl::controlApplication()
             default:
             setStateMachine(MENU, ENTRY);
                 break;
-            }
+             }
+        }
 
             break;
 
@@ -556,6 +599,8 @@ void AppControl::controlApplication()
         default:
         setStateMachine(MENU, ENTRY);
             break;
+     
         }
     }
+ 
 }
