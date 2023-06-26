@@ -289,13 +289,56 @@ void StopMusic()
 
 void AppControl::displayMeasureInit()
 {
+    mlcd.fillBackgroundWhite();
+    mlcd.displayJpgImageCoordinate(Measure_measure_IMG_PATH, TITLE_X_CRD , TITLE_Y_CRD );
+    mlcd.displayJpgImageCoordinate(Measure_cm_IMG_PATH, COMMON_BUTTON_DOWN_X_CRD , COMMON_WBGT_IMG_PATH_Y_100 );
+    mlcd.displayJpgImageCoordinate(COMMON_BLUEDOT_IMG_PATH, COMMON_Measure_IMG_PATH_X_139 , COMMON_WBGT_IMG_PATH_Y_100 );
+    mlcd.displayJpgImageCoordinate(COMMON_BUTTON_BACK_IMG_PATH, COMMON_BUTTON_DECIDE_X_CRD , COMMON_BUTTON_DECIDE_Y_CRD ); 
 
 }
 
 void AppControl::displayMeasureDistance()
 {
+    double distance = mmdist.getDistance();
+    int distanceInt = (int)distance;
+
+    // 百の位
+    int digitHundreds = distanceInt / 100;
+    if (distanceInt == 0) {
+    mlcd.displayJpgImageCoordinate(Measure_fillwhite_IMG_PATH, COMMON_Measure_IMG_PATH_X_10, COMMON_WBGT_IMG_PATH_Y_100);
+    } else {
+    mlcd.displayJpgImageCoordinate(g_str_blue[digitHundreds], COMMON_Measure_IMG_PATH_X_10, COMMON_WBGT_IMG_PATH_Y_100);
+    }
+
+    // 十の位
+    int digitTens = (distanceInt / 10) % 10;
+    if (distanceInt == 0) {
+    mlcd.displayJpgImageCoordinate(Measure_fillwhite_IMG_PATH, COMMON_Measure_IMG_PATH_X_53, COMMON_WBGT_IMG_PATH_Y_100);
+    } else {
+    mlcd.displayJpgImageCoordinate(g_str_blue[digitTens], COMMON_Measure_IMG_PATH_X_53, COMMON_WBGT_IMG_PATH_Y_100);
+    }
+
+    // 一の位
+    int digitOnes = distanceInt % 10;
+    if (distanceInt == 0) {
+    mlcd.displayJpgImageCoordinate(Measure_fillwhite_IMG_PATH, COMMON_Measure_IMG_PATH_X_96, COMMON_WBGT_IMG_PATH_Y_100);
+    } else {
+    mlcd.displayJpgImageCoordinate(g_str_blue[digitOnes], COMMON_Measure_IMG_PATH_X_96, COMMON_WBGT_IMG_PATH_Y_100);
+    }
+
+    // 小数部分を表示
+    double fractionPart = distance - distanceInt;
+    if (fractionPart > 0.0) {
+    int digitFraction = (int)(fractionPart * 10);
+        if (distanceInt == 0) {
+        mlcd.displayJpgImageCoordinate(Measure_fillwhite_IMG_PATH, COMMON_Measure_IMG_PATH_X_182, COMMON_WBGT_IMG_PATH_Y_100);
+        } else {
+        mlcd.displayJpgImageCoordinate(g_str_blue[digitFraction], COMMON_Measure_IMG_PATH_X_182, COMMON_WBGT_IMG_PATH_Y_100);
+        }
+    }
 
 }
+
 
 void AppControl::displayDateInit()
 {
@@ -513,25 +556,32 @@ void AppControl::controlApplication()
             displayMusicTitle();
             displayMusicPlay();
             startMusicPlayback();
-            setStateMachine(MUSIC_STOP, EXIT);
+            setStateMachine(MUSIC_PLAY, DO);
             
                 break;
 
             case DO:
             Serial.println("MUSIC_PLAY DO");
-            
+            setBtnAllFlgFalse();
+            displayMusicTitle();
+            displayMusicPlay();
+
                 if(m_flag_btnA_is_pressed){
                 setBtnAllFlgFalse();
+                displayMusicTitle();
                 StopMusic();
                 setStateMachine(MUSIC_STOP, ENTRY);
-                }
-
-                if(m_flag_btnB_is_pressed){
+                }else if(m_flag_btnB_is_pressed){
                 setBtnAllFlgFalse();
                 mlcd.clearDisplay();
                 setStateMachine(MUSIC_STOP, ENTRY);
-    
-            setStateMachine(MUSIC_PLAY, EXIT);
+                }else if(m_flag_btnC_is_pressed){
+                setBtnAllFlgFalse();
+                mlcd.clearDisplay();
+                setStateMachine(MUSIC_STOP, ENTRY);
+                }
+
+            setStateMachine(MUSIC_PLAY, DO);
                 break;
 
             case EXIT:
@@ -542,7 +592,7 @@ void AppControl::controlApplication()
             default:
             setStateMachine(MENU, ENTRY);
                 break;
-             }
+        
         }
 
             break;
@@ -552,12 +602,20 @@ void AppControl::controlApplication()
             switch (getAction()) {
             case ENTRY:
             Serial.println("MEASURE ENTRY");
+            displayMeasureInit();
             setStateMachine(MEASURE, DO);
                 break;
 
             case DO:
             Serial.println("MEASURE DO");
+            setBtnAllFlgFalse();
+            displayMeasureDistance();
+            
+            if(m_flag_btnB_is_pressed){
+            setBtnAllFlgFalse();
+            mlcd.clearDisplay();
             setStateMachine(MEASURE, EXIT);
+            }
                 break;
 
             case EXIT:

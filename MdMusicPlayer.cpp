@@ -34,7 +34,8 @@ char* MdMusicPlayer::getTitle()
 void MdMusicPlayer::selectNextMusic()
 {
     entry = musicfolder.openNextFile();
-    if (!entry) {
+    if (!entry)
+     {
         musicfolder.rewindDirectory();
         entry = musicfolder.openNextFile();
         Serial.println("return latestfile");
@@ -52,7 +53,7 @@ void MdMusicPlayer::prepareMP3()
     mp3->begin(id3, out);
 }
 
-bool MdMusicPlayer::isRunningMP3()
+bool MdMusicPlayer::isRunningMP3()  
 {
     return mp3->isRunning();
 }

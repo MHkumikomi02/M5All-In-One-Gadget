@@ -134,6 +134,15 @@
 
 
 // Measure jpg image coordinate
+#define Measure_measure_IMG_PATH "/images/measure/measure.jpg"
+#define Measure_cm_IMG_PATH "/images/measure/cm.jpg"
+#define Measure_fillwhite_IMG_PATH "/images/measure/fillwhite.jpg"
+#define COMMON_Measure_IMG_PATH_X_10 10
+#define COMMON_Measure_IMG_PATH_X_53 53
+#define COMMON_Measure_IMG_PATH_X_96 96
+#define COMMON_Measure_IMG_PATH_X_139 139
+#define COMMON_Measure_IMG_PATH_X_182 182
+
 
 // Date jpg image coordinate
 
