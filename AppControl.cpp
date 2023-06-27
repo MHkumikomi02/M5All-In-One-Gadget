@@ -11,7 +11,7 @@ MdDateTime mdtime;
 const char* g_str_orange[] = {
     COMMON_ORANGE0_IMG_PATH,
     COMMON_ORANGE1_IMG_PATH,
-    COMMON_ORANGE2_IMG_PATH,
+    COMMON_ORANGE2_IMG_PATH, b 
     COMMON_ORANGE3_IMG_PATH,
     COMMON_ORANGE4_IMG_PATH,
     COMMON_ORANGE5_IMG_PATH,
@@ -302,6 +302,10 @@ void AppControl::displayMeasureDistance()
     double distance = mmdist.getDistance();
     int distanceInt = (int)distance;
 
+    Serial.print("Distance:");
+    Serial.print(distance);
+    Serial.println("[cm]");
+
     // 百の位
     int digitHundreds = distanceInt / 100;
     if (distanceInt == 0) {
@@ -392,7 +396,7 @@ void AppControl::controlApplication()
 
             switch (getAction()) {
             case ENTRY:
-            Serial.println("MENU ENTRY");
+            //Serial.println("MENU ENTRY");
             mlcd.fillBackgroundWhite();
             displayMenuInit();
             setStateMachine(MENU, DO);
@@ -400,7 +404,7 @@ void AppControl::controlApplication()
 
             
             case DO:
-            Serial.println("MENU DO");
+            //Serial.println("MENU DO");
                 if(m_flag_btnC_is_pressed){
                 switch(getFocusState()){
                     case MENU_WBGT:
@@ -463,7 +467,7 @@ void AppControl::controlApplication()
                 setBtnAllFlgFalse();
                 break;
             case EXIT:
-            Serial.println("MENU EXIT");
+            //Serial.println("MENU EXIT");
             setStateMachine(WBGT, ENTRY);
             default:
                 break;
@@ -475,13 +479,13 @@ void AppControl::controlApplication()
 
             switch (getAction()) {
             case ENTRY:
-            Serial.println("WBGT ENTRY");
+           //Serial.println("WBGT ENTRY");
             setStateMachine(WBGT, DO);
             setBtnAllFlgFalse();
                 break;
 
             case DO:
-            Serial.println("WBGT DO");
+            //Serial.println("WBGT DO");
             displayWBGTInit();
             displayTempHumiIndex();
 
@@ -492,7 +496,7 @@ void AppControl::controlApplication()
             }
             break;
             case EXIT:
-            Serial.println("WBGT EXIT");
+            //Serial.println("WBGT EXIT");
             setStateMachine(MENU, ENTRY);
             break;
            default:         
@@ -504,7 +508,7 @@ void AppControl::controlApplication()
         case MUSIC_STOP:
             switch (getAction()) {
             case ENTRY:
-            Serial.println("MUSIC_STOP ENTRY");
+            //Serial.println("MUSIC_STOP ENTRY");
             setBtnAllFlgFalse();
             displayMusicInit();
             displayMusicTitle();
@@ -512,7 +516,7 @@ void AppControl::controlApplication()
             break;
 
             case DO:
-            Serial.println("MUSIC_STOP DO");
+            //Serial.println("MUSIC_STOP DO");
  
                 if(m_flag_btnA_is_pressed){
                 setBtnAllFlgFalse();
@@ -535,7 +539,7 @@ void AppControl::controlApplication()
             setStateMachine(MUSIC_STOP, EXIT);
 
             case EXIT:
-            Serial.println("MUSIC_STOP EXIT");
+            //Serial.println("MUSIC_STOP EXIT");
             setBtnAllFlgFalse();
             mlcd.clearDisplay();
             setStateMachine(MENU, ENTRY);
@@ -551,7 +555,7 @@ void AppControl::controlApplication()
         case MUSIC_PLAY:
              switch (getAction()) {
             case ENTRY:
-            Serial.println("MUSIC_PLAY ENTRY");
+            //Serial.println("MUSIC_PLAY ENTRY");
             setBtnAllFlgFalse();
             displayMusicTitle();
             displayMusicPlay();
@@ -561,7 +565,7 @@ void AppControl::controlApplication()
                 break;
 
             case DO:
-            Serial.println("MUSIC_PLAY DO");
+            //Serial.println("MUSIC_PLAY DO");
             setBtnAllFlgFalse();
             displayMusicTitle();
             displayMusicPlay();
@@ -585,7 +589,7 @@ void AppControl::controlApplication()
                 break;
 
             case EXIT:
-            Serial.println("MUSIC_PLAY EXIT");
+            //Serial.println("MUSIC_PLAY EXIT");
             setStateMachine(MENU, ENTRY);
                 break;
 
@@ -601,13 +605,13 @@ void AppControl::controlApplication()
 
             switch (getAction()) {
             case ENTRY:
-            Serial.println("MEASURE ENTRY");
+            //Serial.println("MEASURE ENTRY");
             displayMeasureInit();
             setStateMachine(MEASURE, DO);
                 break;
 
             case DO:
-            Serial.println("MEASURE DO");
+            //Serial.println("MEASURE DO");
             setBtnAllFlgFalse();
             displayMeasureDistance();
             
@@ -619,12 +623,12 @@ void AppControl::controlApplication()
                 break;
 
             case EXIT:
-            Serial.println("MEASURE EXIT");
+            //Serial.println("MEASURE EXIT");
             setStateMachine(MENU, ENTRY);
                 break;
 
             default:
-            Serial.println("MEASURE default");
+            //Serial.println("MEASURE default");
             setStateMachine(MENU, ENTRY);
                 break;
             }
@@ -634,22 +638,22 @@ void AppControl::controlApplication()
         case DATE:
             switch (getAction()) {
             case ENTRY:
-            Serial.println("DATE ENTRY");
+            //Serial.println("DATE ENTRY");
             setStateMachine(DATE, DO);
                 break;
 
             case DO:
-            Serial.println("DATE DO");
+            //Serial.println("DATE DO");
             setStateMachine(MEASURE, EXIT);
                 break;
 
             case EXIT:
-            Serial.println("DATE EXIT");
+            //Serial.println("DATE EXIT");
             setStateMachine(MENU, ENTRY);
                 break;
 
             default:
-            Serial.println("DATE default");
+            //Serial.println("DATE default");
             setStateMachine(MENU, ENTRY);
                 break;
             }
